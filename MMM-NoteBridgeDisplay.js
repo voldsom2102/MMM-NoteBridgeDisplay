@@ -14,6 +14,9 @@ Module.register("MMM-NoteBridgeDisplay", {
 		showTitle: true,
 		showLastUpdated: true,
 		maxWidth: "400px",
+		titleColor: "",
+		listColor: "",
+		backgroundColor: "",
 		animationSpeed: 750
 	},
 
@@ -34,6 +37,7 @@ Module.register("MMM-NoteBridgeDisplay", {
 		const wrapper = document.createElement("div");
 		wrapper.className = "notebridge-wrapper";
 		wrapper.style.maxWidth = this.config.maxWidth;
+		this.setColor(wrapper, "backgroundColor", this.config.backgroundColor);
 
 		if (this.errorMessage) {
 			wrapper.classList.add("notebridge-error");
@@ -56,12 +60,14 @@ Module.register("MMM-NoteBridgeDisplay", {
 		if (this.config.showTitle && this.note.title) {
 			const title = document.createElement("div");
 			title.className = "notebridge-title";
+			this.setColor(title, "color", this.config.titleColor);
 			title.textContent = this.note.title;
 			wrapper.appendChild(title);
 		}
 
 		const content = document.createElement("div");
 		content.className = "notebridge-content";
+		this.setColor(content, "color", this.config.listColor);
 		content.textContent = this.note.content;
 		wrapper.appendChild(content);
 
@@ -74,6 +80,22 @@ Module.register("MMM-NoteBridgeDisplay", {
 		}
 
 		return wrapper;
+	},
+
+	setColor(element, property, value) {
+		if (!value || !this.isColor(value)) {
+			return;
+		}
+		element.style[property] = value;
+	},
+
+	isColor(value) {
+		if (typeof value !== "string") {
+			return false;
+		}
+
+		const hexColor = /^#[\da-f]{3,4}$|^#[\da-f]{6}$|^#[\da-f]{8}$/i;
+		return hexColor.test(value) || (/^[a-z]+$/i.test(value) && CSS.supports("color", value));
 	},
 
 	getTranslations() {

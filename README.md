@@ -72,7 +72,10 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
 		updateInterval: 5 * 60 * 1000, // how often to re-fetch the note, ms
 		showTitle: true,
 		showLastUpdated: true,
-		maxWidth: "400px"
+    maxWidth: "400px",
+    titleColor: "gold",
+    listColor: "#ffffff",
+    backgroundColor: "#202020"
 	}
 }
 ```
@@ -91,6 +94,9 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
 | `showTitle`        | boolean | `true`                  | Show the note title above its content.                                        |
 | `showLastUpdated`  | boolean | `true`                  | Show the note's last-updated timestamp.                                       |
 | `maxWidth`         | string  | `"400px"`               | CSS max-width applied to the module wrapper.                                  |
+| `titleColor`       | string  | `""`                    | Color of the note title, using a CSS color name or hex value.                  |
+| `listColor`        | string  | `""`                    | Color of the note content/list, using a CSS color name or hex value.           |
+| `backgroundColor`  | string  | `""`                    | Background color of the module, using a CSS color name or hex value.           |
 
 ## How it works
 
