@@ -1,0 +1,24 @@
+{
+  "name": "MMM-NoteBridgeDisplay",
+  "version": "1.0.0",
+  "description": "MagicMirror module that displays a specific note from a note-bridge (Supabase) account, with encrypted credentials.",
+  "main": "MMM-NoteBridgeDisplay.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "magicmirror",
+    "note-bridge",
+    "supabase"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/MMM-NoteBridgeDisplay.git"
+  }
+}

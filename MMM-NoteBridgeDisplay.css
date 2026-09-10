@@ -1,0 +1,24 @@
+.notebridge-wrapper {
+	font-family: var(--font-primary, "Roboto Condensed", sans-serif);
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+.notebridge-title {
+	font-size: 1.3em;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+
+.notebridge-content {
+	font-size: 1em;
+	line-height: 1.4em;
+}
+
+.notebridge-updated {
+	margin-top: 8px;
+}
+
+.notebridge-error {
+	color: #ff5555;
+}
