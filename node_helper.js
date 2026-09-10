@@ -13,6 +13,15 @@ const NodeHelper = require("node_helper");
 const { createClient } = require("@supabase/supabase-js");
 const { decrypt } = require("./lib/crypto");
 
+let localConfig = {};
+try {
+	localConfig = require("./config.local");
+} catch (err) {
+	if (err.code !== "MODULE_NOT_FOUND" || err.message.includes("config.local")) {
+		throw err;
+	}
+}
+
 module.exports = NodeHelper.create({
 	start() {
 		this.config = null;
@@ -34,7 +43,7 @@ module.exports = NodeHelper.create({
 
 	socketNotificationReceived(notification, payload) {
 		if (notification === "NOTEBRIDGE_INIT") {
-			this.config = payload;
+			this.config = Object.assign({}, localConfig, payload);
 			this.initialize().catch((err) => this.sendError(err));
 		}
 	},
@@ -61,7 +70,9 @@ module.exports = NodeHelper.create({
 		const { supabaseUrl, supabaseAnonKey, auth } = this.config;
 
 		if (!supabaseUrl || !supabaseAnonKey) {
-			throw new Error("supabaseUrl and supabaseAnonKey must be set in the module config.");
+			throw new Error(
+				"supabaseUrl and supabaseAnonKey must be set in the module config or config.local.js."
+			);
 		}
 		if (!auth || !auth.email || !auth.password) {
 			throw new Error(

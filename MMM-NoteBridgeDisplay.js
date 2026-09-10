@@ -6,8 +6,6 @@
  */
 Module.register("MMM-NoteBridgeDisplay", {
 	defaults: {
-		supabaseUrl: "",
-		supabaseAnonKey: "",
 		auth: null, // { email: {encrypted}, password: {encrypted} }
 		passphraseEnv: "NOTEBRIDGE_PASSPHRASE",
 		noteId: "",

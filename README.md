@@ -43,15 +43,24 @@ npm install
 
 ## Configuration
 
-Add the module to the `modules` array in your `config.js`:
+Create a private local config file for the Supabase project settings:
+
+```sh
+cp config.local.js.example config.local.js
+```
+
+Edit `config.local.js` and replace the `supabaseUrl` and `supabaseAnonKey`
+placeholders. This file is ignored by git. You may also put these two values
+directly in the module's MagicMirror `config.js` block; explicit module config
+values take precedence over `config.local.js`.
+
+Add the module to the `modules` array in your MagicMirror `config.js`:
 
 ```js
 {
 	module: "MMM-NoteBridgeDisplay",
 	position: "top_right",
 	config: {
-		supabaseUrl: "https://your-project.supabase.co",
-		supabaseAnonKey: "your-supabase-anon-key",
 		// Paste the object printed by scripts/encrypt-credentials.js:
 		auth: {
 			email: { salt: "...", iv: "...", authTag: "...", ciphertext: "..." },
@@ -72,8 +81,8 @@ Add the module to the `modules` array in your `config.js`:
 
 | Option            | Type    | Default                 | Description                                                                 |
 | ------------------ | ------- | ------------------------ | ----------------------------------------------------------------------------- |
-| `supabaseUrl`      | string  | `""`                    | Your note-bridge Supabase project URL.                                        |
-| `supabaseAnonKey`  | string  | `""`                    | The Supabase project's anon/public API key.                                   |
+| `supabaseUrl`      | string  | unset                   | Your note-bridge Supabase project URL. Set it in `config.local.js` or the module config. |
+| `supabaseAnonKey`  | string  | unset                   | The Supabase project's anon/public API key. Set it in `config.local.js` or the module config. |
 | `auth`             | object  | `null`                  | Encrypted `{ email, password }` credential payloads (see above).              |
 | `passphraseEnv`    | string  | `"NOTEBRIDGE_PASSPHRASE"` | Name of the environment variable holding the decryption passphrase.         |
 | `noteId`           | string  | `""`                    | UUID of the note to display. Takes priority over `noteTitle` if both are set. |
