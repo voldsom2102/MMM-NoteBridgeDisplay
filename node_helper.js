@@ -12,6 +12,7 @@
 const NodeHelper = require("node_helper");
 const { createClient } = require("@supabase/supabase-js");
 const { decrypt } = require("./lib/crypto");
+const { getSupabaseCredentials } = require("./lib/supabase-config");
 
 module.exports = NodeHelper.create({
 	start() {
@@ -57,12 +58,13 @@ module.exports = NodeHelper.create({
 		return passphrase;
 	},
 
-	async initialize() {
-		const { supabaseUrl, supabaseAnonKey, auth } = this.config;
+	getSupabaseCredentials() {
+		return getSupabaseCredentials(process.env);
+	},
 
-		if (!supabaseUrl || !supabaseAnonKey) {
-			throw new Error("supabaseUrl and supabaseAnonKey must be set in the module config.");
-		}
+	async initialize() {
+		const { auth } = this.config;
+
 		if (!auth || !auth.email || !auth.password) {
 			throw new Error(
 				"auth.email and auth.password (encrypted credential objects) must be " +
@@ -73,6 +75,7 @@ module.exports = NodeHelper.create({
 		const passphrase = this.getPassphrase();
 		const email = decrypt(auth.email, passphrase);
 		const password = decrypt(auth.password, passphrase);
+		const { supabaseUrl, supabaseAnonKey } = this.getSupabaseCredentials();
 
 		this.supabase = createClient(supabaseUrl, supabaseAnonKey, {
 			auth: { persistSession: false, autoRefreshToken: true }
