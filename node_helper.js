@@ -11,7 +11,7 @@
 
 const NodeHelper = require("node_helper");
 const { createClient } = require("@supabase/supabase-js");
-const { decrypt } = require("./lib/crypto");
+const { decrypt, decryptNote } = require("./lib/crypto");
 
 let localConfig = {};
 try {
@@ -28,6 +28,7 @@ module.exports = NodeHelper.create({
 		this.supabase = null;
 		this.pollTimer = null;
 		this.session = null;
+		this.accountEmail = null;
 	},
 
 	stop() {
@@ -84,6 +85,7 @@ module.exports = NodeHelper.create({
 		const passphrase = this.getPassphrase();
 		const email = decrypt(auth.email, passphrase);
 		const password = decrypt(auth.password, passphrase);
+		this.accountEmail = email;
 
 		this.supabase = createClient(supabaseUrl, supabaseAnonKey, {
 			auth: { persistSession: false, autoRefreshToken: true }
@@ -126,11 +128,12 @@ module.exports = NodeHelper.create({
 			return;
 		}
 
+		const decryptedNote = decryptNote(data, this.accountEmail, localConfig.noteEncryptionSecret);
 		this.sendSocketNotification("NOTEBRIDGE_NOTE", {
-			id: data.id,
-			title: data.title,
-			content: data.content,
-			updatedAt: data.updated_at
+			id: decryptedNote.id,
+			title: decryptedNote.title,
+			content: decryptedNote.content,
+			updatedAt: decryptedNote.updated_at
 		});
 	}
 });

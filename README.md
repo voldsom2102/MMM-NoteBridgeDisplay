@@ -49,10 +49,14 @@ Create a private local config file for the Supabase project settings:
 cp config.local.js.example config.local.js
 ```
 
-Edit `config.local.js` and replace the `supabaseUrl` and `supabaseAnonKey`
-placeholders. This file is ignored by git. You may also put these two values
-directly in the module's MagicMirror `config.js` block; explicit module config
-values take precedence over `config.local.js`.
+Edit `config.local.js` and replace the `supabaseUrl`, `supabaseAnonKey`, and
+`noteEncryptionSecret` placeholders. Use the same encryption secret that you
+set in the note-bridge Android app. This local-only secret is used to decrypt
+encrypted note titles and contents on the server; it is separate from the
+`NOTEBRIDGE_PASSPHRASE` used to decrypt the login credentials. This file is
+ignored by git. You may also put the Supabase URL and anon key directly in the
+module's MagicMirror `config.js` block; explicit module config values take
+precedence over `config.local.js`.
 
 Add the module to the `modules` array in your MagicMirror `config.js`:
 
@@ -86,6 +90,7 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
 | ------------------ | ------- | ------------------------ | ----------------------------------------------------------------------------- |
 | `supabaseUrl`      | string  | unset                   | Your note-bridge Supabase project URL. Set it in `config.local.js` or the module config. |
 | `supabaseAnonKey`  | string  | unset                   | The Supabase project's anon/public API key. Set it in `config.local.js` or the module config. |
+| `noteEncryptionSecret` | string | unset                | The note-bridge encryption secret set in the Android app. Keep it in `config.local.js`; it is never sent to the browser. |
 | `auth`             | object  | `null`                  | Encrypted `{ email, password }` credential payloads (see above).              |
 | `passphraseEnv`    | string  | `"NOTEBRIDGE_PASSPHRASE"` | Name of the environment variable holding the decryption passphrase.         |
 | `noteId`           | string  | `""`                    | UUID of the note to display. Takes priority over `noteTitle` if both are set. |
@@ -105,9 +110,11 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
 - `node_helper.js` runs server-side, decrypts the configured credentials with
   the passphrase from the environment, signs in to Supabase as the
   note-bridge user (`auth.signInWithPassword`), and queries the `notes` table
-  for the configured note. This means access is governed by the same
-  row-level-security policies as the mobile/web app — the module can only
-  ever read notes belonging to that account.
+  for the configured note. Encrypted note titles and contents are decrypted
+  there with `noteEncryptionSecret` before the note is sent to the front end.
+  This means access is governed by the same row-level-security policies as
+  the mobile/web app — the module can only ever read notes belonging to that
+  account.
 - The note is re-fetched on `updateInterval` so edits made elsewhere show up
   on the mirror.
 
@@ -118,6 +125,8 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
   per secret.
 - The passphrase is never written to disk by this module and must be
   supplied via environment variable at runtime.
+- The note-bridge encryption secret is read only by the server-side helper
+  from `config.local.js`; it is distinct from the credential passphrase.
 - Rotate credentials by re-running `scripts/encrypt-credentials.js` and
   updating `config.js`.
 - This module intentionally does not support the Supabase service-role key,
