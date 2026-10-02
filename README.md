@@ -10,9 +10,23 @@ repo, e.g. in an environment variable). Decryption only ever happens in the
 Node.js `node_helper` process on the server side — plaintext credentials are
 never sent to the browser/front-end.
 
-## Screenshot
+## Screenshots
 
-_(add a screenshot here once you have the module running)_
+The module running on a MagicMirror instance (default colors):
+
+![MMM-NoteBridgeDisplay on MagicMirror](docs/screenshots/live.png)
+
+Mockups of different `titleColor` / `listColor` / `backgroundColor` combinations:
+
+| Default | Ocean |
+| --- | --- |
+| ![Default](docs/screenshots/mock-default.png) | ![Ocean](docs/screenshots/mock-ocean.png) |
+| `titleColor: "#ffffff"`, `listColor: "#aaaaaa"` | `titleColor: "#ffd166"`, `listColor: "#e0f2ff"`, `backgroundColor: "#0b3954"` |
+
+| Forest | Sunset |
+| --- | --- |
+| ![Forest](docs/screenshots/mock-forest.png) | ![Sunset](docs/screenshots/mock-sunset.png) |
+| `titleColor: "#f4f1de"`, `listColor: "#b7e4c7"`, `backgroundColor: "#1b4332"` | `titleColor: "#fff3b0"`, `listColor: "#ffe5d9"`, `backgroundColor: "#9d0208"` |
 
 ## Installation
 
