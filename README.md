@@ -1,8 +1,13 @@
 # MMM-NoteBridgeDisplay
 
 A [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) module that
-connects to a [note-bridge](https://github.com/voldsom2102/simpleNotes)
+connects to a [note-bridge](https://play.google.com/store/apps/details?id=com.notebridge&hl=en_US)
 (Supabase-backed) account and displays one specific note on your mirror.
+
+> **Requirement:** this module depends on the
+> [note-bridge Android app](https://play.google.com/store/apps/details?id=com.notebridge&hl=en_US)
+> from the Google Play Store. Install it, create your account and notes there,
+> and use the same account (and encryption secret, if you set one) with this module.
 
 Note-bridge account credentials are stored **encrypted** in `config.js`
 (AES-256-GCM, key derived via PBKDF2 from a passphrase you keep out of the
@@ -59,7 +64,7 @@ npm install
 
 The Supabase URL and anon key are built into the module and are not user
 configurable. The note-bridge login credentials and the note encryption secret
-(the one set in the note-bridge Android app) are stored encrypted in the module
+(the one set in the [note-bridge Android app](https://play.google.com/store/apps/details?id=com.notebridge&hl=en_US)) are stored encrypted in the module
 config. `scripts/encrypt-credentials.js` prompts for all three and prints the
 `auth` and `noteEncryptionSecret` values to paste in.
 
