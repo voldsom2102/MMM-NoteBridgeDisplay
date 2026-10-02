@@ -13,14 +13,9 @@ const NodeHelper = require("node_helper");
 const { createClient } = require("@supabase/supabase-js");
 const { decrypt, decryptNote } = require("./lib/crypto");
 
-let localConfig = {};
-try {
-	localConfig = require("./config.local");
-} catch (err) {
-	if (err.code !== "MODULE_NOT_FOUND" || err.message.includes("config.local")) {
-		throw err;
-	}
-}
+// Fixed project credentials; the anon key is a public, publishable key.
+const SUPABASE_URL = "https://fzvqyhhameqhwxmzscbp.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_jnDxwoUGmcTtfmWaQQaqJA_cgKql7VY";
 
 module.exports = NodeHelper.create({
 	start() {
@@ -29,6 +24,7 @@ module.exports = NodeHelper.create({
 		this.pollTimer = null;
 		this.session = null;
 		this.accountEmail = null;
+		this.noteSecret = undefined;
 	},
 
 	stop() {
@@ -44,7 +40,7 @@ module.exports = NodeHelper.create({
 
 	socketNotificationReceived(notification, payload) {
 		if (notification === "NOTEBRIDGE_INIT") {
-			this.config = Object.assign({}, localConfig, payload);
+			this.config = Object.assign({}, payload);
 			this.initialize().catch((err) => this.sendError(err));
 		}
 	},
@@ -68,13 +64,8 @@ module.exports = NodeHelper.create({
 	},
 
 	async initialize() {
-		const { supabaseUrl, supabaseAnonKey, auth } = this.config;
+		const { auth } = this.config;
 
-		if (!supabaseUrl || !supabaseAnonKey) {
-			throw new Error(
-				"supabaseUrl and supabaseAnonKey must be set in the module config or config.local.js."
-			);
-		}
 		if (!auth || !auth.email || !auth.password) {
 			throw new Error(
 				"auth.email and auth.password (encrypted credential objects) must be " +
@@ -86,8 +77,11 @@ module.exports = NodeHelper.create({
 		const email = decrypt(auth.email, passphrase);
 		const password = decrypt(auth.password, passphrase);
 		this.accountEmail = email;
+		this.noteSecret = this.config.noteEncryptionSecret
+			? decrypt(this.config.noteEncryptionSecret, passphrase)
+			: undefined;
 
-		this.supabase = createClient(supabaseUrl, supabaseAnonKey, {
+		this.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 			auth: { persistSession: false, autoRefreshToken: true }
 		});
 
@@ -128,7 +122,7 @@ module.exports = NodeHelper.create({
 			return;
 		}
 
-		const decryptedNote = decryptNote(data, this.accountEmail, localConfig.noteEncryptionSecret);
+		const decryptedNote = decryptNote(data, this.accountEmail, this.noteSecret);
 		this.sendSocketNotification("NOTEBRIDGE_NOTE", {
 			id: decryptedNote.id,
 			title: decryptedNote.title,

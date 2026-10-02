@@ -73,7 +73,7 @@ test("decryptNote reports a missing note encryption secret", () => {
 	};
 	assert.throws(
 		() => decryptNote(note, "note@example.com", ""),
-		/noteEncryptionSecret.*config\.local\.js/
+		/noteEncryptionSecret.*module config/
 	);
 });
 

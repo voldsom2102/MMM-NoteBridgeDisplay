@@ -3,4 +3,3 @@ npm-debug.log
 .DS_Store
 *.log
 .env
-config.local.js

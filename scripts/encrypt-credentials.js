@@ -7,7 +7,7 @@
  * Usage:
  *   NOTEBRIDGE_PASSPHRASE="a strong secret" node scripts/encrypt-credentials.js
  *
- * You will be prompted for the note-bridge account email and password. The
+ * You will be prompted for the note-bridge account email, password and (optionally) note encryption secret. The
  * script prints an `auth` object you paste into this module's config block.
  * The passphrase itself is never printed or stored; you must export the same
  * NOTEBRIDGE_PASSPHRASE value in the environment that runs MagicMirror so the
@@ -77,6 +77,11 @@ async function main() {
 	const email = await prompt("Note-bridge account email: ");
 	const password = await prompt("Note-bridge account password: ", { hidden: true });
 
+	const noteSecret = await prompt(
+		"Note-bridge encryption secret (leave blank if notes are not encrypted): ",
+		{ hidden: true }
+	);
+
 	if (!email || !password) {
 		console.error("Email and password are both required.");
 		process.exit(1);
@@ -86,18 +91,11 @@ async function main() {
 	const encryptedPassword = encrypt(password, passphrase);
 
 	console.log("\nAdd this to your MagicMirror config.js module config:\n");
-	console.log(
-		JSON.stringify(
-			{
-				auth: {
-					email: encryptedEmail,
-					password: encryptedPassword
-				}
-			},
-			null,
-			4
-		)
-	);
+	const output = { auth: { email: encryptedEmail, password: encryptedPassword } };
+	if (noteSecret) {
+		output.noteEncryptionSecret = encrypt(noteSecret, passphrase);
+	}
+	console.log(JSON.stringify(output, null, 4));
 	console.log(
 		"\nRemember: export NOTEBRIDGE_PASSPHRASE with the same passphrase in the " +
 			"environment that runs MagicMirror (e.g. in your systemd unit, pm2 " +
