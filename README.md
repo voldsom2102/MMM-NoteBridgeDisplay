@@ -32,7 +32,7 @@ Mockups of different `titleColor` / `listColor` / `backgroundColor` combinations
 
 ```sh
 cd ~/MagicMirror/modules
-git clone https://github.com/<your-username>/MMM-NoteBridgeDisplay.git
+git clone https://github.com/voldsom2102/MMM-NoteBridgeDisplay.git
 cd MMM-NoteBridgeDisplay
 npm install
 ```
