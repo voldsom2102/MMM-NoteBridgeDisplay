@@ -1,11 +1,11 @@
 # MMM-NoteBridgeDisplay
 
 A [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) module that
-connects to a [note-bridge](https://play.google.com/store/apps/details?id=com.notebridge&hl=en_US)
+connects to a [Note Bridge](https://play.google.com/store/apps/details?id=com.notebridge&hl=en_US)
 (Supabase-backed) account and displays one specific note on your mirror.
 
 > **Requirement:** this module depends on the
-> [note-bridge Android app](https://play.google.com/store/apps/details?id=com.notebridge&hl=en_US)
+> [Note Bridge Android app](https://play.google.com/store/apps/details?id=com.notebridge&hl=en_US)
 > from the Google Play Store. Install it, create your account and notes there,
 > and use the same account (and encryption secret, if you set one) with this module.
 
