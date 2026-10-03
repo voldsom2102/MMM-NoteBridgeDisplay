@@ -90,12 +90,12 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
 		},
 		passphraseEnv: "NOTEBRIDGE_PASSPHRASE", // env var holding the decryption passphrase
 		noteId: "", // UUID of the note to display, OR
-		noteTitle: "Grocery List", // match by exact title if noteId is not set
+		noteTitle: "", // match by exact title if noteId is not set
 		updateInterval: 5 * 60 * 1000, // how often to re-fetch the note, ms
 		showTitle: true,
 		showLastUpdated: true,
     maxWidth: "400px",
-    titleColor: "gold",
+    titleColor: "#ffffff",
     listColor: "#ffffff",
     backgroundColor: "#202020",
 	}
