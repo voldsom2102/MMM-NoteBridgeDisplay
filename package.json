@@ -4,7 +4,8 @@
   "description": "MagicMirror module that displays a specific note from a note-bridge (Supabase) account, with encrypted credentials.",
   "main": "MMM-NoteBridgeDisplay.js",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "lint": "eslint ."
   },
   "keywords": [
     "magicmirror",
@@ -16,6 +17,10 @@
   "type": "commonjs",
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "eslint": "^10.0.0"
   },
   "repository": {
     "type": "git",

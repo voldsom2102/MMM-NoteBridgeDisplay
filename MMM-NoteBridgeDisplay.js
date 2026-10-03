@@ -1,4 +1,4 @@
-/* global Module Log moment */
+/* global Module Log */
 
 /**
  * MMM-NoteBridgeDisplay

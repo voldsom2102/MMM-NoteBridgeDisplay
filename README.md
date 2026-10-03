@@ -39,7 +39,15 @@ Mockups of different `titleColor` / `listColor` / `backgroundColor` combinations
 cd ~/MagicMirror/modules
 git clone https://github.com/voldsom2102/MMM-NoteBridgeDisplay.git
 cd MMM-NoteBridgeDisplay
-npm install
+npm ci --omit=dev
+```
+
+## Update
+
+```sh
+cd ~/MagicMirror/modules/MMM-NoteBridgeDisplay
+git pull
+npm ci --omit=dev
 ```
 
 ## Encrypting your credentials
@@ -89,9 +97,9 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
     maxWidth: "400px",
     titleColor: "gold",
     listColor: "#ffffff",
-    backgroundColor: "#202020"
+    backgroundColor: "#202020",
 	}
-}
+},
 ```
 
 ### Config options
@@ -144,9 +152,11 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
 
 ```sh
 npm test
+npm run lint
 ```
 
-Runs unit tests for the encryption/decryption helpers in `lib/crypto.js`.
+Runs unit tests for the encryption/decryption helpers in `lib/crypto.js` and
+checks the JavaScript files with ESLint.
 
 ## License
 
