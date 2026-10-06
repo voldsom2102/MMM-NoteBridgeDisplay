@@ -156,7 +156,7 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
 
 ```sh
 npm test
-npm run lint
+node --run lint
 ```
 
 Runs unit tests for the encryption/decryption helpers in `lib/crypto.js` and

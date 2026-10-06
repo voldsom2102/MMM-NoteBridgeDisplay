@@ -1,8 +1,9 @@
 "use strict";
 
 const js = require("@eslint/js");
+const { defineConfig } = require("eslint/config");
 
-module.exports = [
+module.exports = defineConfig([
 	js.configs.recommended,
 	{
 		files: ["**/*.js"],
@@ -23,4 +24,4 @@ module.exports = [
 			}
 		}
 	}
-];
+]);
