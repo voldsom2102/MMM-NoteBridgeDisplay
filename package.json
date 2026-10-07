@@ -1,5 +1,5 @@
 {
-  "name": "MMM-NoteBridgeDisplay",
+  "name": "mmm-notebridgedisplay",
   "version": "1.0.0",
   "description": "MagicMirror module that displays a specific note from a note-bridge (Supabase) account, with encrypted credentials.",
   "main": "MMM-NoteBridgeDisplay.js",
@@ -12,7 +12,7 @@
     "note-bridge",
     "supabase"
   ],
-  "author": "",
+  "author": "voldsom2102",
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
