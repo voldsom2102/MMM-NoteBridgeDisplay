@@ -108,21 +108,42 @@ module.exports = NodeHelper.create({
 		let query = this.supabase
 			.from("notes")
 			.select("id, title, content, updated_at")
-			.is("deleted_at", null)
-			.limit(1);
+			.is("deleted_at", null);
 
-		query = noteId ? query.eq("id", noteId) : query.eq("title", noteTitle);
+		query = noteId
+			? query.eq("id", noteId).limit(1)
+			: query.order("updated_at", { ascending: false });
 
-		const { data, error } = await query.maybeSingle();
+		const { data, error } = await query;
 		if (error) {
 			throw new Error("Failed to fetch note: " + error.message);
 		}
-		if (!data) {
+
+		// Titles are stored encrypted, so title matching must happen after decryption.
+		let decryptedNote = null;
+		let decryptError = null;
+		for (const row of data || []) {
+			let candidate;
+			try {
+				candidate = decryptNote(row, this.accountEmail, this.noteSecret);
+			} catch (err) {
+				decryptError = decryptError || err;
+				continue;
+			}
+			if (noteId || candidate.title === noteTitle) {
+				decryptedNote = candidate;
+				break;
+			}
+		}
+
+		if (!decryptedNote) {
+			if (decryptError) {
+				throw decryptError;
+			}
 			this.sendSocketNotification("NOTEBRIDGE_NOTE_NOT_FOUND", {});
 			return;
 		}
 
-		const decryptedNote = decryptNote(data, this.accountEmail, this.noteSecret);
 		this.sendSocketNotification("NOTEBRIDGE_NOTE", {
 			id: decryptedNote.id,
 			title: decryptedNote.title,
