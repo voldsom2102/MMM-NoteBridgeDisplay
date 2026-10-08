@@ -65,8 +65,8 @@ npm ci --omit=dev
    NOTEBRIDGE_PASSPHRASE="a strong secret passphrase" node scripts/encrypt-credentials.js
    ```
 
-3. The script prints an `auth` object. Copy it into the module's config block
-   in `config.js` (see below).
+3. The script prints config entries without an enclosing object. Copy them into
+   the module's config block in `config.js` (see below).
 4. Make sure the same `NOTEBRIDGE_PASSPHRASE` value is available in the
    environment that actually runs MagicMirror (shell profile, systemd unit
    `Environment=` line, pm2 ecosystem file, `.env` loaded before start, etc).
@@ -87,7 +87,7 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
 	module: "MMM-NoteBridgeDisplay",
 	position: "top_right",
 	config: {
-		// Paste the object printed by scripts/encrypt-credentials.js:
+		// Paste the entries printed by scripts/encrypt-credentials.js:
 		auth: {
 			email: { salt: "...", iv: "...", authTag: "...", ciphertext: "..." },
 			password: { salt: "...", iv: "...", authTag: "...", ciphertext: "..." }
