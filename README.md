@@ -43,7 +43,7 @@ Mockups of different `titleColor` / `listColor` / `backgroundColor` combinations
 cd ~/MagicMirror/modules
 git clone https://github.com/voldsom2102/MMM-NoteBridgeDisplay.git
 cd MMM-NoteBridgeDisplay
-npm ci --omit=dev
+npm install
 ```
 
 ## Update
@@ -51,7 +51,7 @@ npm ci --omit=dev
 ```sh
 cd ~/MagicMirror/modules/MMM-NoteBridgeDisplay
 git pull
-npm ci --omit=dev
+npm install
 ```
 
 ## Encrypting your credentials
