@@ -1,0 +1,60 @@
+name: Dependency check
+
+on:
+  schedule:
+    # 1st and 15th of every month at 13:00 UTC
+    - cron: "0 13 1,15 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Collect outdated and vulnerable dependencies
+        id: report
+        run: |
+          npm outdated > outdated.txt || true
+          npm audit > audit.txt || true
+          if [ -s outdated.txt ] || ! grep -q "found 0 vulnerabilities" audit.txt; then
+            {
+              echo "Automated check run on $(date -u +%F)."
+              echo
+              echo "### npm outdated"
+              echo '```'
+              cat outdated.txt
+              echo '```'
+              echo
+              echo "### npm audit"
+              echo '```'
+              cat audit.txt
+              echo '```'
+            } > report.md
+            echo "needs_issue=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open issue (emails you via GitHub notifications)
+        if: steps.report.outputs.needs_issue == 'true'
+        run: |
+          gh label create dependency-updates --color 0366d6 \
+            --description "Automated dependency check" 2>/dev/null || true
+          for n in $(gh issue list --label dependency-updates --state open --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "Superseded by a newer dependency check."
+          done
+          gh issue create \
+            --title "Dependency updates available ($(date -u +%F))" \
+            --label dependency-updates \
+            --body-file report.md
