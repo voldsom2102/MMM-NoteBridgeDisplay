@@ -29,7 +29,7 @@ function readVarFromFiles(name) {
 		let text;
 		try {
 			text = fs.readFileSync(file, "utf8");
-		} catch (e) {
+		} catch {
 			continue;
 		}
 		let found;
