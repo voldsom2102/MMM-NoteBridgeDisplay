@@ -9,6 +9,9 @@
  * to the front-end module via socket notifications.
  */
 
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
 const NodeHelper = require("node_helper");
 const { createClient } = require("@supabase/supabase-js");
 const { decrypt, decryptNote } = require("./lib/crypto");
@@ -16,6 +19,32 @@ const { decrypt, decryptNote } = require("./lib/crypto");
 // Fixed project credentials; the anon key is a public, publishable key.
 const SUPABASE_URL = "https://fzvqyhhameqhwxmzscbp.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_jnDxwoUGmcTtfmWaQQaqJA_cgKql7VY";
+
+// MagicMirror is often started by pm2/systemd/autostart, which do not source
+// shell profiles, so fall back to reading the variable from these files.
+function readVarFromFiles(name) {
+	const files = ["/etc/environment", path.join(os.homedir(), ".bashrc"), path.join(os.homedir(), ".profile")];
+	const wanted = name.toLowerCase();
+	for (const file of files) {
+		let text;
+		try {
+			text = fs.readFileSync(file, "utf8");
+		} catch (e) {
+			continue;
+		}
+		let found;
+		for (const line of text.split(/\r?\n/)) {
+			const m = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
+			if (!m || m[1].toLowerCase() !== wanted) continue;
+			let value = m[2].trim();
+			const quoted = value.match(/^(["'])(.*?)\1/);
+			value = quoted ? quoted[2] : value.replace(/\s+#.*$/, "");
+			if (value) found = value;
+		}
+		if (found) return found;
+	}
+	return undefined;
+}
 
 module.exports = NodeHelper.create({
 	start() {
@@ -53,7 +82,7 @@ module.exports = NodeHelper.create({
 
 	getPassphrase() {
 		const envVar = this.config.passphraseEnv || "NOTEBRIDGE_PASSPHRASE";
-		const passphrase = process.env[envVar];
+		const passphrase = process.env[envVar] || readVarFromFiles(envVar);
 		if (!passphrase) {
 			throw new Error(
 				"Environment variable " + envVar + " is not set. It must contain the " +
