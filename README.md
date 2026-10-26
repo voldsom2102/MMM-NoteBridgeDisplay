@@ -10,7 +10,7 @@ connects to a [Note Bridge Android app ↗](https://play.google.com/store/apps/d
 > and use the same account (and encryption secret, if you set one) with this module.
 >
 > You can also create and edit notes and checklists from any browser with the Note Bridge
-> web app at <https://notebridge.ajmartin.dev> (sign in with the same account and
+> web app at [Note Bridge Website ↗](https://notebridge.ajmartin.dev) (sign in with the same account and
 > encryption secret). Notes edited there appear on the mirror like any other edit.
 
 Note-bridge account credentials are stored **encrypted** in `config.js`
