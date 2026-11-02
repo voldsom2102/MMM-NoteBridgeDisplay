@@ -1,3 +1,7 @@
+If you like my work, consider buying me a coffee.
+
+<a href="https://ko-fi.com/ajmartin_dev"><img height="36" src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at ko-fi.com" /></a>
+
 # MMM-NoteBridgeDisplay
 
 A [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) module that
@@ -165,5 +169,3 @@ checks the JavaScript files with ESLint.
 ## License
 
 MIT
-
-<a href="https://ko-fi.com/ajmartin_dev"><img height="36" src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at ko-fi.com" /></a>
