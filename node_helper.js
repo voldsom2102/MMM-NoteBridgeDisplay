@@ -9,9 +9,9 @@
  * to the front-end module via socket notifications.
  */
 
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
 const NodeHelper = require("node_helper");
 const { createClient } = require("@supabase/supabase-js");
 const { decrypt, decryptNote } = require("./lib/crypto");
@@ -34,11 +34,26 @@ function readVarFromFiles(name) {
 		}
 		let found;
 		for (const line of text.split(/\r?\n/)) {
-			const m = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
-			if (!m || m[1].toLowerCase() !== wanted) continue;
-			let value = m[2].trim();
-			const quoted = value.match(/^(["'])(.*?)\1/);
-			value = quoted ? quoted[2] : value.replace(/\s+#.*$/, "");
+			let assignment = line.trim();
+			if (assignment.startsWith("export") && /\s/.test(assignment[6] || "")) {
+				assignment = assignment.slice(6).trimStart();
+			}
+			const separator = assignment.indexOf("=");
+			if (separator === -1) continue;
+			const key = assignment.slice(0, separator);
+			if (!/^[A-Za-z_]\w*$/.test(key) || key.toLowerCase() !== wanted) continue;
+			let value = assignment.slice(separator + 1).trim();
+			if (value.startsWith('"') || value.startsWith("'")) {
+				const quote = value[0];
+				const closingQuote = value.indexOf(quote, 1);
+				if (closingQuote !== -1) {
+					value = value.slice(1, closingQuote);
+				} else {
+					value = value.replace(/\s+#.*$/, "");
+				}
+			} else {
+				value = value.replace(/\s+#.*$/, "");
+			}
 			if (value) found = value;
 		}
 		if (found) return found;
@@ -69,7 +84,7 @@ module.exports = NodeHelper.create({
 
 	socketNotificationReceived(notification, payload) {
 		if (notification === "NOTEBRIDGE_INIT") {
-			this.config = Object.assign({}, payload);
+			this.config = { ...payload };
 			this.initialize().catch((err) => this.sendError(err));
 		}
 	},
@@ -148,27 +163,15 @@ module.exports = NodeHelper.create({
 			throw new Error("Failed to fetch note: " + error.message);
 		}
 
-		// Titles are stored encrypted, so title matching must happen after decryption.
-		let decryptedNote = null;
-		let decryptError = null;
-		for (const row of data || []) {
-			let candidate;
-			try {
-				candidate = decryptNote(row, this.accountEmail, this.noteSecret);
-			} catch (err) {
-				decryptError = decryptError || err;
-				continue;
-			}
-			if (noteId || candidate.title === noteTitle) {
-				decryptedNote = candidate;
-				break;
-			}
-		}
+		const decryptedNote = findConfiguredNote(
+			data || [],
+			this.accountEmail,
+			this.noteSecret,
+			noteId,
+			noteTitle
+		);
 
 		if (!decryptedNote) {
-			if (decryptError) {
-				throw decryptError;
-			}
 			this.sendSocketNotification("NOTEBRIDGE_NOTE_NOT_FOUND", {});
 			return;
 		}
@@ -181,3 +184,23 @@ module.exports = NodeHelper.create({
 		});
 	}
 });
+
+function findConfiguredNote(rows, accountEmail, noteSecret, noteId, noteTitle) {
+	let decryptError = null;
+	for (const row of rows) {
+		let candidate;
+		try {
+			candidate = decryptNote(row, accountEmail, noteSecret);
+		} catch (err) {
+			decryptError = decryptError || err;
+			continue;
+		}
+		if (noteId || candidate.title === noteTitle) {
+			return candidate;
+		}
+	}
+	if (decryptError) {
+		throw decryptError;
+	}
+	return null;
+}

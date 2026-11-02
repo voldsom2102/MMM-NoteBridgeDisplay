@@ -97,7 +97,7 @@ async function main() {
 	}
 	const configEntries = Object.entries(output)
 		.map(([key, value]) => {
-			const serializedValue = JSON.stringify(value, null, "\t").replace(/\n/g, "\n\t");
+			const serializedValue = JSON.stringify(value, null, "\t").replaceAll("\n", "\n\t");
 			return `\t${key}: ${serializedValue},`;
 		})
 		.join("\n");
