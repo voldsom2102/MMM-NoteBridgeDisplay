@@ -166,6 +166,12 @@ node --run lint
 Runs unit tests for the encryption/decryption helpers in `lib/crypto.js` and
 checks the JavaScript files with ESLint.
 
+## Code of Conduct
+
+We are committed to making participation in this project welcoming and
+respectful. Please review the [Code of Conduct](CODE_OF_CONDUCT.md) before
+participating in discussions or contributing.
+
 ## License
 
 MIT
