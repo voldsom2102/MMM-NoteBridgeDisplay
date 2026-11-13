@@ -1,16 +1,27 @@
 # Code of Conduct
 
-We want participation in MMM-NoteBridgeDisplay to be welcoming and respectful.
-Treat other contributors with courtesy, assume good intent, and focus
-disagreement on ideas and code rather than people.
+## Our commitment
 
-Harassment, discrimination, personal attacks, and disruptive or abusive
-behavior are not acceptable in project spaces. Follow the applicable rules
-when participating in GitHub issues, pull requests, and discussions.
+We are committed to making participation in this project a welcoming and respectful experience for everyone, regardless of background or identity.
 
-If behavior needs attention, contact the repository maintainers through GitHub.
-For security vulnerabilities, use the repository's private vulnerability
-reporting feature when available rather than opening a public issue.
+## Expected behavior
 
-Maintainers may remove content or restrict participation when necessary to
-protect the community.
+- Be respectful and considerate in discussions and reviews.
+- Give and accept constructive feedback with openness.
+- Focus criticism on ideas and work, not on people.
+- Help keep project spaces welcoming and on topic.
+
+## Unacceptable behavior
+
+- Harassment, insults, or discriminatory language.
+- Personal attacks, intimidation, or unwelcome sexual attention.
+- Publishing another person's private information without permission.
+- Any other conduct that would be inappropriate in a professional community.
+
+## Enforcement
+
+Project maintainers may remove, edit, or reject comments and contributions that violate this Code of Conduct. They may also temporarily or permanently exclude participants from project spaces for behavior they consider inappropriate, threatening, or harmful.
+
+## Reporting
+
+Please report concerns privately to a project maintainer through GitHub. Include relevant details so the concern can be reviewed. Do not share private or sensitive information in a public issue.
