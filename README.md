@@ -129,8 +129,9 @@ Add the module to the `modules` array in your MagicMirror `config.js`:
 
 ## How it works
 
-- The front-end module (`MMM-NoteBridgeDisplay.js`) only ever handles
-  already-decrypted note text; it never touches credentials.
+- The front-end module (`MMM-NoteBridgeDisplay.js`) receives encrypted
+  credential payloads in its configuration but never decrypts them. It displays
+  the note text sent by the server-side helper.
 - `node_helper.js` runs server-side, decrypts the configured credentials with
   the passphrase from the environment, signs in to Supabase as the
   note-bridge user (`auth.signInWithPassword`), and queries the `notes` table
